@@ -1,0 +1,1 @@
+plackup -L shotgun -r local-hateda.psgi
