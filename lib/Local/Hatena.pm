@@ -2,9 +2,10 @@ package Local::Hatena;
 use strict;
 use warnings;
 
-our $VERSION = "0.1";
-
 use DirHandle;
+use Path::Class;
+
+our $VERSION = "0.1";
 
 sub new {
     my ($class, %opts) = @_;
@@ -73,25 +74,26 @@ sub serve_index {
 }
 
 sub serve_entry {
-    my ($self, $env) = @_;
-    my $path = $env->{PATH_INFO};
-    my $filepath = join '-', grep { $_ ne '' } split('/', $path); # XXX: treat neatly
-#     $filepath = sprintf "%s/%s%s", $self->droot, $filepath, '.txt'; # XXX
-#     -e $filepath or return [ 404, ['Content-Type' => 'text/html'], [ '404 Not Found' ] ];
-
-    # XXX: for loop and join
-    my $body = file($filepath)->slurp;
-#     $body = Text::Xatena->new->format($body,
-#        inline => Text::Xatena::Inline::Aggressive->new(cache => Cache::FileCache->new({default_expires_in => 60 * 60 * 24 * 30})));
-
-    $body = file("static/html/header.html")->slurp . $body;
-    $body .= file("static/html/footer.html")->slurp;
-
-    [200,  ['Content-Type' => 'text/html; charset=utf-8'], [$body]];
+    my ($self, $path) = @_;
+    $path = substr($path, 1);
+    $path =~ s!/!-!g;
+    my $names = $self->entries->{$path}; # XXX: /2010/01のような形式
+    scalar @$names == 0 and return [ 404, ['Content-Type' => 'text/html'], [ '404 Not Found' ] ];
+    my $html;
+    for my $name (@$names) {
+        my $filepath = sprintf "%s/%s.txt", $self->rootdir($name), $path;
+        my $body = file($filepath)->slurp;
+        $html .= sprintf "<h2 class='entry-type'>%s</h2>", $name;
+        $html .= Text::Xatena->new->format($body,
+                                          inline => Text::Xatena::Inline::Aggressive->new(cache => Cache::FileCache->new({default_expires_in => 60 * 60 * 24 * 30})));
+    }
+    $html = file("static/html/header.html")->slurp . $html;
+    $html .= file("static/html/footer.html")->slurp;
+    [200,  ['Content-Type' => 'text/html; charset=utf-8'], [$html]];
 }
 
 1;
 __END__
-{ 20100101 => ['diary', 'group1', 'group2'],
+{ 2010-01-01 => ['diary', 'group1', 'group2'],
     ...
 }
