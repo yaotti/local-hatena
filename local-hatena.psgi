@@ -8,22 +8,22 @@ use Text::Xatena::Inline::Aggressive;
 use Cache::FileCache;
 
 use lib "lib";
-use Local::Hatena::Server;
+use Local::Hatena;
 
 my $app = sub {
     my $env = shift;
     my $path = $env->{PATH_INFO};
 
-    my $server = Local::Hatena::Server->new(id => $ENV{HATENA_ID} || "yaotti");
+    my $lhtn = Local::Hatena->new(id => $ENV{HATENA_ID} || "yaotti");
 
     if ($path eq '/favicon.ico') {
         return [ 200, ['Content-Type' => 'image/x-icon'], [] ];
     } elsif ($path eq '/') {
-        return $server->serve_index;
+        return $lhtn->serve_index;
     }
 
     my $filepath = join '-', grep { $_ ne '' } split('/', $path);
-    $filepath = sprintf "%s/%s%s", $server->droot, $filepath, '.txt'; # XXX
+    $filepath = sprintf "%s/%s%s", $lhtn->droot, $filepath, '.txt'; # XXX
     -e $filepath or return [ 404, ['Content-Type' => 'text/html'], [ '404 Not Found' ] ];
 
     my $body = file($filepath)->slurp;
