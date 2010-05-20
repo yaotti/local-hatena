@@ -28,5 +28,10 @@ my $app = sub {
     $body = Text::Xatena->new->format($body,
        inline => Text::Xatena::Inline::Aggressive->new(cache => Cache::FileCache->new({default_expires_in => 60 * 60 * 24 * 30})));
 
+    $filepath = "static/html/header.html";
+    $body = file($filepath)->slurp . $body if -e $filepath;
+    $filepath = "static/html/footer.html";
+    $body .= file($filepath)->slurp if -e $filepath;
+
     [200,  ['Content-Type' => 'text/html; charset=utf-8'], [$body]];
 };
