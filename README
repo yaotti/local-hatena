@@ -1,1 +1,1 @@
-plackup -L shotgun -r local-hateda.psgi
+plackup local-hatena.psgi
