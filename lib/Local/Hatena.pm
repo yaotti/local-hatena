@@ -59,9 +59,12 @@ sub entries {
 sub serve_index {
     my $self = shift;
     my $html = "<html><body><ul>";
-    for my $date (reverse sort keys %{$self->entries}) {
-        my ($y, $m, $d) = $date =~ /(\d{4})-(\d{2})-(\d{2})/;
-        $html .= sprintf q!<li><a href="/%s/%s/%s">%s/%s/%s@%s</a></li>!, $y, $m, $d, $y, $m, $d, join(',', @{$self->entries->{$y}->{$m}->{$d}});
+    for my $y (reverse sort keys %{$self->entries}) {
+        for my $m (reverse sort keys %{$self->entries->{$y}}) {
+            for my $d (reverse sort keys %{$self->entries->{$y}->{$m}}) {
+                $html .= sprintf q!<li><a href="/%s/%s/%s">%s/%s/%s@%s</a></li>!, $y, $m, $d, $y, $m, $d, join(',', @{$self->entries->{$y}->{$m}->{$d}});
+            }
+        }
     }
     $html .= "</ul></body></html>";
     [ 200, ['Content-Type' => 'text/html; charset=utf-8'], [ $html ] ];
