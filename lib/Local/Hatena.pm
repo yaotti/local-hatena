@@ -58,13 +58,19 @@ sub entries {
 
 sub serve_index {
     my $self = shift;
-    my $html = "<html><body><ul>";
+    my $html = "<html><body>";
     for my $y (reverse sort keys %{$self->entries}) {
+        $html .= sprintf q!<h2>%s</h2>!, $y;
+        $html .= "<ul>";
         for my $m (reverse sort keys %{$self->entries->{$y}}) {
+            $html .= sprintf q!<li><a href="/%s/%s">%s</a></li>!, $y, $m, $m;
+            $html .= "<ul>";
             for my $d (reverse sort keys %{$self->entries->{$y}->{$m}}) {
-                $html .= sprintf q!<li><a href="/%s/%s/%s">%s/%s/%s@%s</a></li>!, $y, $m, $d, $y, $m, $d, join(',', @{$self->entries->{$y}->{$m}->{$d}});
+                $html .= sprintf q!<li><a href="/%s/%s/%s">%s@%s</a></li>!, $d, $y, $m, $d, join(',', @{$self->entries->{$y}->{$m}->{$d}});
             }
+            $html .= "</ul>";
         }
+        $html .= "</ul>";
     }
     $html .= "</ul></body></html>";
     [ 200, ['Content-Type' => 'text/html; charset=utf-8'], [ $html ] ];
