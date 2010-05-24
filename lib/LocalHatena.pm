@@ -1,4 +1,4 @@
-package Local::Hatena;
+package LocalHatena;
 use strict;
 use warnings;
 

@@ -7,13 +7,13 @@ use Text::Xatena::Inline::Aggressive;
 use Cache::FileCache;
 
 use lib "lib";
-use Local::Hatena;
+use LocalHatena;
 
 my $app = sub {
     my $env = shift;
     my $path = $env->{PATH_INFO};
 
-    my $lhtn = Local::Hatena->new(id => $ENV{HATENA_ID} || "yaotti");
+    my $lhtn = LocalHatena->new(id => $ENV{HATENA_ID} || "yaotti");
 
     if ($path eq '/favicon.ico') {
         return [ 200, ['Content-Type' => 'image/x-icon'], [] ];
