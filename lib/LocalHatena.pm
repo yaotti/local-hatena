@@ -72,7 +72,9 @@ sub keywords {
     for my $name (@{$self->groups('keywords')}) {
         my $dh = DirHandle->new($self->keyword_root . "/" . $name);
         while (defined(my $e = $dh->read)) {
-            push @{$keywords->{$name}}, $e;
+            next unless $e =~ /(.+)\.txt/;
+            next if $1 eq 'cookie'; # ignore cookie file
+            push @{$keywords->{$name}}, $1;
         }
     }
     $self->{keywords} = $keywords;

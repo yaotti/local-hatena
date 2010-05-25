@@ -11,15 +11,8 @@ sub new {
 
 sub do_serve {
     my $self = shift;
-    my $entries = $self->hatena->entries;
-    my $html = $self->hatena->html('index', {entries => $entries});
+    my $html = $self->hatena->html('index', {entries => $self->hatena->entries, keywords => $self->hatena->keywords });
     [ 200, ['Content-Type' => 'text/html; charset=utf-8'], [ $html ] ];
 }
 
 1;
-
-
-
-
-
-

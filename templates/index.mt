@@ -6,17 +6,31 @@
 <meta http-equiv="Content-Script-Type" content="text/javascript">
 <title>Local Hatena</title>
 <style>
+body {
+background: #DEE3E6;
+}
 .main {
 margin: 0 auto;
 width: 900px;
 }
+.entries {
+width: 400px;
+float: left;
+}
+.keywords {
+width: 400px;
+float: right;
+}
+
 </style>
 </head>
 <body>
 <h1>Local Hatena Diary</h1>
 <div class="main">
+  <div class="entries">
+    <h2>Group/Diary Entries</h2>
 <? for my $y (reverse sort keys %$entries) { ?>
-    <h2><?= $y ?></h2>
+    <h3><?= $y ?></h3>
     <ul>
     <? for my $m (reverse sort keys %{$entries->{$y}}) { ?>
       <li><a href="<?= sprintf "/%s/%s", $y, $m ?>"><?= $m ?></a></li>
@@ -28,6 +42,18 @@ width: 900px;
     <? } ?>
     </ul>
 <? } ?>
+  </div>
+  <div class="keywords">
+    <h2>Group Keywords</h2>
+  <? for my $group (sort keys %$keywords) { ?>
+    <h3><?= $group ?></h3>
+    <ul>
+    <? for my $keyword (sort @{$keywords->{$group}}) { ?>
+      <li><a href="<?= sprintf "/%s/%s", $group, $keyword?>"><?= $keyword ?></a></li>
+    <? } ?>
+    </ul>
+  <? } ?>
+  </div>
 </div>
 </body>
 </html>
