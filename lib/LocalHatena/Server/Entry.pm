@@ -41,7 +41,7 @@ sub do_serve {
 
 sub formatted_body_on_date {
     my ($self, $name, $date) = @_;
-    my $body = file($self->hatena->rootdir($name), $date)->slurp;
+    my $body = file($self->hatena->rootdir($name), $date . '.txt')->slurp;
     $body = Text::Xatena->new->format($body,
                                       inline => Text::Xatena::Inline::Aggressive->new(cache =>
                                                                                       Cache::FileCache->new({default_expires_in => 60 * 60 * 24 * 30})));
