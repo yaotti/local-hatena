@@ -3,6 +3,7 @@ use strict;
 use warnings;
 
 use DirHandle;
+use LocalHatena::View;
 
 our $VERSION = "0.1";
 
@@ -42,7 +43,7 @@ sub keyword_root {
 }
 
 sub rootdir {
-    my ($self, $type, $name) = @_;
+    my ($self, $name) = @_;
     if ($name eq 'diary') {
         return join '/', $self->user_root, 'diary';
     } else {

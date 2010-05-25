@@ -9,7 +9,6 @@ use Cache::FileCache;
 
 use base qw/LocalHatena::Server/;
 
-
 sub new {
     my ($class, $env) = @_;
     my ($y, $m, $d) = grep { $_ ne '' }
@@ -31,20 +30,20 @@ sub do_serve {
         $dates = [join '-', ($y, $m, $d)];
     }
 
-    my $html;
+    my $stash;
     for my $date (@$dates) {    # dates
         my ($y, $m, $d) = split '-', $date;
         my $names = $entries->{$y}->{$m}->{$d};
         for my $name (@$names) { # groups
             my $filepath = sprintf "%s/%s.txt", $self->hatena->rootdir($name), $date;
             my $body = file($filepath)->slurp;
-            $html .= sprintf "<h2 class='entry-type'>%s</h2>", $name;
-            $html .= Text::Xatena->new->format($body,
+            $body = Text::Xatena->new->format($body,
                                                inline => Text::Xatena::Inline::Aggressive->new(cache => Cache::FileCache->new({default_expires_in => 60 * 60 * 24 * 30})));
+            push @$stash, { name => $name, body => $body };
         }
     }
-    $html = file("static/html/header.html")->slurp . $html;
-    $html .= file("static/html/footer.html")->slurp;
+
+    my $html = $self->hatena->html('entry.html', @$stash);
     [200,  ['Content-Type' => 'text/html; charset=utf-8'], [$html]];
 }
 
