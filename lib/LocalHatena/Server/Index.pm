@@ -5,7 +5,7 @@ use warnings;
 use base qw/LocalHatena::Server/;
 
 sub new {
-    my $class = shift;
+    my ($class, $req) = @_;
     bless {}, $class;
 }
 

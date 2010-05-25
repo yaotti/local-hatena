@@ -3,16 +3,13 @@ use strict;
 use warnings;
 
 use Path::Class;
-use Text::Xatena;
-use Text::Xatena::Inline::Aggressive;
-use Cache::FileCache;
 
 use base qw/LocalHatena::Server/;
 
 sub new {
-    my ($class, $env) = @_;
+    my ($class, $req) = @_;
     my ($y, $m, $d) = grep { $_ ne '' }
-      split '/', substr($env->{PATH_INFO}, 1);
+      split '/', substr($req->path_info, 1);
     bless { year => $y, month => $m, day => $d }, $class;
 }
 
@@ -44,8 +41,7 @@ sub do_serve {
 
 sub formatted_body_on_date {
     my ($self, $name, $date) = @_;
-    my $filepath = sprintf "%s/%s.txt", $self->hatena->rootdir($name), $date;
-    my $body = file($filepath)->slurp;
+    my $body = file($self->hatena->rootdir($name), $date)->slurp;
     $body = Text::Xatena->new->format($body,
                                       inline => Text::Xatena::Inline::Aggressive->new(cache =>
                                                                                       Cache::FileCache->new({default_expires_in => 60 * 60 * 24 * 30})));

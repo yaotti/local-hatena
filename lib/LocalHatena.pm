@@ -4,6 +4,10 @@ use warnings;
 
 use DirHandle;
 use LocalHatena::View;
+use Text::Xatena;
+use Text::Xatena::Inline::Aggressive;
+use Cache::FileCache;
+
 
 our $VERSION = "0.1";
 
@@ -78,6 +82,18 @@ sub keywords {
         }
     }
     $self->{keywords} = $keywords;
+}
+
+sub format {
+    my ( $self, $body ) = @_;
+    Text::Xatena->new->format(
+        $body,
+        inline => Text::Xatena::Inline::Aggressive->new(
+            cache => Cache::FileCache->new(
+                { default_expires_in => 60 * 60 * 24 * 30 }
+            )
+        )
+    );
 }
 
 1;

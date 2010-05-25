@@ -1,7 +1,7 @@
 package LocalHatena::Server;
 use strict;
 use warnings;
-
+use Plack::Request;
 use LocalHatena;
 use UNIVERSAL::require;
 
@@ -18,7 +18,8 @@ sub hatena {
 
 sub run {
     my ($self, $env) = @_;
-    my $path = $env->{PATH_INFO};
+    my $req = Plack::Request->new($env);
+    my $path = $req->path_info;
     if ($path eq '/favicon.ico') {
         return [ 200, ['Content-Type' => 'image/x-icon'], [] ];
     }
@@ -32,7 +33,7 @@ sub run {
 
     $module->require or return [ 404, ['Content-Type' => 'text/html'], ['not found']];
 
-    my $server = $module->new($env);
+    my $server = $module->new($req);
     $server->{hatena} = $self->hatena; # ???
     return $server->do_serve;
 }

@@ -49,7 +49,7 @@ float: right;
     <h3><?= $group ?></h3>
     <ul>
     <? for my $keyword (sort @{$keywords->{$group}}) { ?>
-      <li><a href="<?= sprintf "/%s/%s", $group, $keyword?>"><?= $keyword ?></a></li>
+      <li><a href="<?= sprintf "/keyword?group=%s&name=%s", $group, $keyword?>"><?= $keyword ?></a></li>
     <? } ?>
     </ul>
   <? } ?>
