@@ -20,8 +20,10 @@ padding: 0px 10px;
 <body>
 <h1>Local Hatena Diary</h1>
 <div class="main">
-  <h2 class="entry-type"><%= $_[0]->{name} %></h2>
-  <%= $_[0]->{body} %>
+<? for my $e (@$entries) { ?>
+  <h2 class="entry-type"><?= $e->{name} ?></h2>
+  <?= $e->{body} ?>
+  <? } ?>
 </div>
 </body>
 </html>

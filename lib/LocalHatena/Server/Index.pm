@@ -26,7 +26,8 @@ sub do_serve {
         }
         $html .= "</ul>";
     }
-    $html .= "</ul></body></html>";
+    $html .= "</ul>";
+    $html .= "</body></html>";
     [ 200, ['Content-Type' => 'text/html; charset=utf-8'], [ $html ] ];
 }
 

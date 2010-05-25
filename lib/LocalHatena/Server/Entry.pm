@@ -42,8 +42,7 @@ sub do_serve {
             push @$stash, { name => $name, body => $body };
         }
     }
-
-    my $html = $self->hatena->html('entry.html', @$stash);
+    my $html = $self->hatena->html('entry', {entries => $stash});
     [200,  ['Content-Type' => 'text/html; charset=utf-8'], [$html]];
 }
 

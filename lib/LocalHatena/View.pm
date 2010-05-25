@@ -3,22 +3,20 @@ use strict;
 use warnings;
 
 use Path::Class;
-use Text::MicroTemplate::File;
+use Text::MicroTemplate::Extended;
 use Exporter::Lite;
 our @EXPORT = qw/html/;
 
 sub html {
-    my ($hatena, $file, @args) = @_;
-    $hatena->{mt} ||= Text::MicroTemplate::File->new(
+    my ($hatena, $file, $args) = @_;
+    my $mt = Text::MicroTemplate::Extended->new(
         include_path => [ 'templates' ],
         use_cache => 0,
-        tag_start => '<%',
-        tag_end   => '%>',
-        line_start => '%',
         escape_func => undef,
+        template_args => $args
     );
-    #warn @args;
-    $hatena->{mt}->render_file($file, @args);
+    #warn $args;
+    $mt->render($file);
 }
 
 1;
