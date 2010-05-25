@@ -1,1 +1,5 @@
 plackup local-hatena.psgi
+~/.hatena/ACCOUNT1/diary/2010-01-01.txt
+~/.hatena/ACCOUNT2/diary/2010-01-01.txt
+~/.hatena/ACCOUNT1/group/GROUP1/2010-01-01.txt
+~/.hatena/keyword/GROUP1/KEYWORD.txt
