@@ -35,15 +35,21 @@ sub do_serve {
         my ($y, $m, $d) = split '-', $date;
         my $names = $entries->{$y}->{$m}->{$d};
         for my $name (@$names) { # groups
-            my $filepath = sprintf "%s/%s.txt", $self->hatena->rootdir($name), $date;
-            my $body = file($filepath)->slurp;
-            $body = Text::Xatena->new->format($body,
-                                               inline => Text::Xatena::Inline::Aggressive->new(cache => Cache::FileCache->new({default_expires_in => 60 * 60 * 24 * 30})));
-            push @$stash, { name => $name, body => $body };
+            push @$stash, $self->formatted_body_on_date($name, $date);
         }
     }
     my $html = $self->hatena->html('entry', {entries => $stash});
     [200,  ['Content-Type' => 'text/html; charset=utf-8'], [$html]];
+}
+
+sub formatted_body_on_date {
+    my ($self, $name, $date) = @_;
+    my $filepath = sprintf "%s/%s.txt", $self->hatena->rootdir($name), $date;
+    my $body = file($filepath)->slurp;
+    $body = Text::Xatena->new->format($body,
+                                      inline => Text::Xatena::Inline::Aggressive->new(cache =>
+                                                                                      Cache::FileCache->new({default_expires_in => 60 * 60 * 24 * 30})));
+    { name => $name, body => $body };
 }
 
 1;
