@@ -24,6 +24,7 @@ sub groups {
     $self->{groots} ||= do {
         my $groot = $type eq 'diary' ? $self->user_root . "/group" : $self->keyword_root;
         my $dh = DirHandle->new($groot);
+        $dh or return [];
         my $groups;
         while (defined(my $r = $dh->read)) {
             push @$groups, $r if $r =~ /^[^.]\w+/;
